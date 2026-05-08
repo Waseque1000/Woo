@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Package, ShoppingCart, Users, Settings, 
   BarChart3, Plus, Search, Filter, MoreHorizontal, 
   TrendingUp, ArrowUpRight, DollarSign, ShoppingBag, Bell,
-  MessageCircle, Send, ArrowLeft
+  MessageCircle, Send, ArrowLeft, Menu
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
