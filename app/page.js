@@ -26,19 +26,19 @@ export default function Home() {
               <span className="w-2 h-2 bg-black rounded-full animate-pulse" />
               <span className="text-xs font-bold uppercase tracking-widest">New Season Arrival</span>
             </div>
-            <h1 className="text-6xl md:text-8xl font-bold tracking-tighter leading-tight">
+            <h1 className="text-5xl md:text-8xl font-bold tracking-tighter leading-tight">
               Elevate Your <br />
               <span className="text-muted-foreground">Digital Store.</span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-md leading-relaxed">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-md leading-relaxed">
               Discover a curated collection of premium products designed for the modern lifestyle. Quality meets minimalist aesthetic.
             </p>
-            <div className="flex flex-wrap gap-4">
-              <Link href="/shop" className="bg-black text-white px-8 py-4 rounded-2xl font-semibold flex items-center gap-2 hover:bg-black/90 transition-all active:scale-95 group shadow-premium">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link href="/shop" className="bg-black text-white px-8 py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 hover:bg-black/90 transition-all active:scale-95 group shadow-premium">
                 Shop Collection
                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </Link>
-              <Link href="/about" className="bg-white text-black border border-border px-8 py-4 rounded-2xl font-semibold hover:bg-muted transition-all active:scale-95 shadow-premium">
+              <Link href="/about" className="bg-white text-black border border-border px-8 py-4 rounded-2xl font-semibold flex justify-center hover:bg-muted transition-all active:scale-95 shadow-premium">
                 Our Story
               </Link>
             </div>
