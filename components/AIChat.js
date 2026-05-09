@@ -84,18 +84,39 @@ export default function AIChat() {
       </AnimatePresence>
 
       <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.05, rotate: [0, -5, 5, 0] }}
+        whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center shadow-2xl relative overflow-hidden group"
+        className="relative w-16 h-16 rounded-[24px] flex items-center justify-center shadow-2xl overflow-hidden group"
       >
-        <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-neutral-900 via-neutral-800 to-neutral-700 group-hover:scale-110 transition-transform duration-500" />
+        <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-xl animate-pulse" />
+
         <AnimatePresence mode="wait">
-          {isOpen ? <X key="x" size={28} /> : <MessageCircle key="msg" size={28} />}
+          {isOpen ? (
+            <motion.div
+              key="close"
+              initial={{ opacity: 0, rotate: -90 }}
+              animate={{ opacity: 1, rotate: 0 }}
+              exit={{ opacity: 0, rotate: 90 }}
+              className="relative z-10 text-white"
+            >
+              <X size={28} strokeWidth={2.5} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="chat"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.5 }}
+              className="relative z-10 text-white flex flex-col items-center gap-0.5"
+            >
+              <Bot size={28} strokeWidth={2.5} />
+              <div className="w-1.5 h-1.5 bg-blue-400 rounded-full shadow-[0_0_8px_rgba(96,165,250,1)]" />
+            </motion.div>
+          )}
         </AnimatePresence>
-        <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-500 rounded-full border-4 border-white flex items-center justify-center">
-           <Sparkles size={8} fill="white" />
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
       </motion.button>
     </div>
   );

@@ -5,12 +5,21 @@ import { products } from "@/utils/seedData";
 import { ArrowRight, Star, Shield, Truck, Zap } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import SalesNotification from "@/components/SalesNotification";
 
 export default function Home() {
-  const featuredProducts = products.slice(0, 8);
+  const featuredProducts = products.slice(0, 4);
+  const topRatedProducts = products.filter(p => p.rating >= 4.8).slice(0, 4);
+  
+  const categories = [
+    { name: "Smart Watches", image: "/images/watch.png", count: "40+ Models", color: "bg-blue-50" },
+    { name: "True Wireless", image: "/images/headphones.png", count: "120+ Models", color: "bg-red-50" },
+    { name: "Wireless Speakers", image: "/images/bag.png", count: "30+ Models", color: "bg-yellow-50" },
+    { name: "Headphones", image: "/images/headphones.png", count: "50+ Models", color: "bg-neutral-50" },
+  ];
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-white">
       <Navbar />
       
       {/* Hero Section */}
@@ -110,30 +119,103 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Banner */}
-      <section className="container mx-auto px-6 py-20">
-        <div className="relative h-[500px] rounded-[40px] overflow-hidden bg-black text-white flex items-center">
-          <div className="absolute inset-0 opacity-40">
-            <Image 
-              src="/images/headphones.png" 
-              alt="Banner" 
-              fill 
-              className="object-cover"
-            />
-          </div>
-          <div className="relative z-10 px-12 md:px-24 space-y-8 max-w-2xl">
-            <h2 className="text-5xl md:text-6xl font-bold tracking-tight leading-tight">
-              Sound Like <br /> Never Before.
-            </h2>
-            <p className="text-lg text-white/70 leading-relaxed">
-              Experience the pure essence of sound with our new Noise-Canceling collection. Designed for comfort, built for quality.
-            </p>
-            <Link href="/shop" className="inline-flex bg-white text-black px-8 py-4 rounded-2xl font-bold hover:bg-white/90 transition-all active:scale-95 shadow-premium">
-              Shop Now
-            </Link>
-          </div>
+      {/* Categories Explorer */}
+      <section className="py-24 bg-neutral-50">
+        <div className="container mx-auto px-6">
+           <div className="text-center mb-16 space-y-4">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-neutral-400">Discover More</p>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Shop by Categories</h2>
+           </div>
+           
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {categories.map((cat, i) => (
+                <Link key={i} href={`/shop?category=${cat.name}`} className="group relative h-80 rounded-[2.5rem] overflow-hidden shadow-premium hover:shadow-hover transition-all duration-500">
+                   <div className={`absolute inset-0 ${cat.color} opacity-50 group-hover:opacity-100 transition-opacity`} />
+                   <div className="absolute inset-0 p-8 flex flex-col items-center justify-center text-center">
+                      <div className="relative w-40 h-40 mb-6 transform group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-700">
+                         <Image src={cat.image} alt={cat.name} fill className="object-contain" />
+                      </div>
+                      <h3 className="text-2xl font-bold mb-2">{cat.name}</h3>
+                      <p className="text-xs font-black uppercase tracking-widest text-neutral-400">{cat.count}</p>
+                   </div>
+                   <div className="absolute bottom-8 right-8 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all">
+                      <ArrowRight size={20} />
+                   </div>
+                </Link>
+              ))}
+           </div>
         </div>
       </section>
+
+      {/* Top Rated Section */}
+      <section className="py-24">
+        <div className="container mx-auto px-6">
+           <div className="flex items-end justify-between mb-16">
+              <div className="space-y-4">
+                 <p className="text-[10px] font-black uppercase tracking-[0.4em] text-neutral-400">Top Rated</p>
+                 <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Voted Best by You</h2>
+              </div>
+              <Link href="/shop" className="hidden md:flex items-center gap-3 font-black text-[10px] uppercase tracking-widest hover:text-neutral-500 transition-colors">
+                 View All <ArrowRight size={16} />
+              </Link>
+           </div>
+           
+           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {topRatedProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+           </div>
+        </div>
+      </section>
+
+      {/* Brand Philosophy Section */}
+      <section className="py-24 bg-neutral-900 text-white overflow-hidden">
+         <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div className="relative h-[600px] rounded-[3rem] overflow-hidden group">
+               <Image 
+                 src="/images/headphones.png" 
+                 alt="Philosophy" 
+                 fill 
+                 className="object-cover transition-transform duration-1000 group-hover:scale-110" 
+               />
+               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+               <div className="absolute bottom-12 left-12">
+                  <p className="text-[10px] font-black uppercase tracking-[0.4em] mb-4 opacity-70">Legacy of Sound</p>
+                  <h3 className="text-4xl font-bold leading-tight">Mastering the art <br /> of audio engineering.</h3>
+               </div>
+            </div>
+            
+            <div className="space-y-12">
+               <div className="space-y-6">
+                  <h2 className="text-5xl md:text-7xl font-bold tracking-tighter leading-none">Why Choose EOO?</h2>
+                  <p className="text-xl text-neutral-400 leading-relaxed max-w-lg">
+                    We don't just build electronics; we craft experiences. Every product is a testament to our commitment to quality, style, and innovation.
+                  </p>
+               </div>
+               
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                  {[
+                    { title: "S1 Processor", desc: "Advanced chips for faster, stable connectivity." },
+                    { title: "PureBass™", desc: "Deep, immersive bass optimized for your music." },
+                    { title: "IPX7 Water", desc: "Built to survive your most intense adventures." },
+                    { title: "ENx™ Tech", desc: "Crystal clear calling with AI noise cancellation." }
+                  ].map((item, i) => (
+                    <div key={i} className="p-8 bg-white/5 rounded-3xl border border-white/10 hover:bg-white/10 transition-colors">
+                       <h4 className="text-lg font-bold mb-2">{item.title}</h4>
+                       <p className="text-sm text-neutral-400 leading-relaxed">{item.desc}</p>
+                    </div>
+                  ))}
+               </div>
+               
+               <Link href="/about" className="inline-flex bg-white text-black px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-neutral-200 transition-all shadow-xl active:scale-95">
+                  Our Mission
+               </Link>
+            </div>
+         </div>
+      </section>
+
+      {/* Sales Pop Component */}
+      <SalesNotification />
 
       <Footer />
     </main>

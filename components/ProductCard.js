@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingCart, Heart, Eye } from "lucide-react";
+import { ShoppingCart, Heart, Eye, Star, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { useCart } from "@/lib/CartContext";
 import { toast } from "sonner";
@@ -16,73 +16,91 @@ export default function ProductCard({ product }) {
     toast.success(`${product.name} added to cart!`);
   };
 
+  const discount = product.oldPrice 
+    ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) 
+    : 0;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      whileHover={{ y: -5 }}
-      className="group bg-white rounded-3xl overflow-hidden shadow-premium hover:shadow-hover transition-all duration-500 border border-border cursor-pointer"
+      whileHover={{ y: -8 }}
+      className="group bg-white rounded-[2.5rem] overflow-hidden shadow-premium hover:shadow-hover transition-all duration-500 border border-neutral-100 cursor-pointer flex flex-col h-full"
       onClick={() => window.location.href = `/products/${product.id}`}
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+      <div className="relative aspect-square overflow-hidden bg-neutral-50 p-6 rounded-[2rem] m-3">
         <Image
-          src={product.image || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop"}
+          src={product.image || "/images/headphones.png"}
           alt={product.name}
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          className="object-contain p-6 transition-transform duration-1000 group-hover:scale-110"
         />
         
         {/* Badges */}
-        <div className="absolute top-4 left-4 flex flex-col gap-2">
-          {product.isNew && (
-            <span className="bg-black text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-              New
+        <div className="absolute top-6 left-6 flex flex-col gap-2 z-10">
+          {discount > 0 && (
+            <span className="bg-yellow-400 text-black text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1 shadow-sm">
+              <Zap size={10} fill="black" />
+              {discount}% OFF
             </span>
           )}
-          {product.sale && (
-            <span className="bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-              Sale
+          {product.rating > 4.5 && (
+            <span className="bg-neutral-900 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-sm">
+              Best Seller
             </span>
           )}
         </div>
 
-        {/* Quick Actions */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100">
-          <button 
-            className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-black hover:bg-black hover:text-white transition-all transform hover:scale-110 shadow-lg"
-            onClick={(e) => { e.stopPropagation(); /* Wishlist placeholder */ }}
-          >
-            <Heart size={18} />
-          </button>
-          <button 
-            onClick={handleAddToCart}
-            className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-black hover:bg-black hover:text-white transition-all transform hover:scale-110 shadow-lg"
-          >
-            <ShoppingCart size={18} />
-          </button>
-          <Link 
-            href={`/products/${product.id}`} 
-            onClick={(e) => e.stopPropagation()}
-            className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-black hover:bg-black hover:text-white transition-all transform hover:scale-110 shadow-lg"
-          >
-            <Eye size={18} />
-          </Link>
+        {/* Wishlist */}
+        <button 
+          className="absolute top-6 right-6 w-10 h-10 bg-white rounded-full flex items-center justify-center text-neutral-300 hover:text-red-500 transition-colors shadow-sm z-10"
+          onClick={(e) => { e.stopPropagation(); /* Wishlist placeholder */ }}
+        >
+          <Heart size={18} />
+        </button>
+
+        {/* Quick View Overlay */}
+        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+           <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-xl transform translate-y-10 group-hover:translate-y-0 transition-transform duration-500">
+              <Eye size={20} className="text-neutral-800" />
+           </div>
         </div>
       </div>
 
-      <div className="p-6">
-        <p className="text-[10px] text-muted-foreground uppercase font-black tracking-[0.2em] mb-2">
-          {product.category || "General"}
-        </p>
-        <h3 className="font-bold text-lg mb-2 group-hover:text-black/60 transition-colors line-clamp-1">
+      <div className="p-8 flex flex-col flex-1">
+        <div className="flex items-center gap-2 mb-3">
+           <div className="flex items-center gap-1 text-yellow-500">
+              <Star size={12} fill="currentColor" />
+              <span className="text-xs font-black text-black">{product.rating || "4.5"}</span>
+           </div>
+           <div className="w-1 h-1 bg-neutral-200 rounded-full" />
+           <span className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">{product.reviews || "120"} Reviews</span>
+        </div>
+
+        <h3 className="font-bold text-lg mb-2 text-neutral-900 line-clamp-1 group-hover:text-neutral-600 transition-colors">
           {product.name}
         </h3>
-        <div className="flex items-center gap-3">
-          <span className="font-black text-xl">${product.price}</span>
-          {product.oldPrice && (
-            <span className="text-sm text-muted-foreground line-through decoration-black/20">${product.oldPrice}</span>
-          )}
+        
+        <p className="text-xs text-neutral-400 mb-6 line-clamp-2 leading-relaxed">
+          {product.description}
+        </p>
+
+        <div className="mt-auto flex items-end justify-between gap-4">
+           <div className="flex flex-col">
+              {product.oldPrice && (
+                <span className="text-xs text-neutral-400 line-through decoration-neutral-300">₹{product.oldPrice}</span>
+              )}
+              <span className="text-2xl font-black text-neutral-900 tracking-tight">₹{product.price}</span>
+           </div>
+           
+           <button 
+             onClick={handleAddToCart}
+             className="px-6 py-3 bg-neutral-900 text-white rounded-2xl flex items-center gap-3 hover:bg-neutral-800 transition-all shadow-lg active:scale-95"
+           >
+             <span className="text-[10px] font-black uppercase tracking-widest">Add</span>
+             <ShoppingCart size={16} />
+           </button>
         </div>
       </div>
     </motion.div>

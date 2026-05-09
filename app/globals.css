@@ -22,8 +22,10 @@
   * {
     @apply border-border outline-none;
   }
-  body {
+  html, body {
     @apply bg-background text-foreground selection:bg-black selection:text-white;
+    overflow-x: hidden;
+    width: 100%;
   }
 }
 
@@ -59,4 +61,15 @@
 }
 ::-webkit-scrollbar-thumb {
   @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/30;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }

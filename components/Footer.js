@@ -72,7 +72,7 @@ export default function Footer() {
 
         <div className="pt-8 border-t border-border flex flex-col md:row items-center justify-between gap-6">
           <p className="text-xs text-muted-foreground">
-            © 2026 EOO WooCommerce. All rights reserved. Built with Next.js.
+            © 2026 EOO WooCommerce. All rights reserved. Waseque Arafat
           </p>
           <div className="flex gap-6 text-xs text-muted-foreground">
             <Link href="/privacy" className="hover:text-black transition-colors">Privacy Policy</Link>
