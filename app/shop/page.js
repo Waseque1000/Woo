@@ -122,13 +122,10 @@ export default function ShopPage() {
       <div className="container mx-auto px-6 py-12">
         <div className="flex flex-col lg:flex-row gap-12">
           
-          {/* Desktop Sidebar - Truly Fixed */}
-          <aside className="hidden lg:block w-72 shrink-0 border-r border-neutral-100 pr-8 fixed top-32 bottom-0 overflow-y-auto no-scrollbar pt-4 pb-20">
+          {/* Desktop Sidebar - Sticky */}
+          <aside className="hidden lg:block w-72 shrink-0 border-r border-neutral-100 pr-8 sticky top-32 h-[calc(100vh-8rem)] overflow-y-auto no-scrollbar pb-20">
              <SidebarContent />
           </aside>
-          
-          {/* Spacer for Fixed Sidebar */}
-          <div className="hidden lg:block w-72 shrink-0" />
 
           {/* Product Section */}
           <div className="flex-1 lg:pl-12">

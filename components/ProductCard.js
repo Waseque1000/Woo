@@ -22,9 +22,6 @@ export default function ProductCard({ product }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
       whileHover={{ y: -8 }}
       className="group bg-white rounded-[2.5rem] overflow-hidden shadow-premium hover:shadow-hover transition-all duration-500 border border-neutral-100 cursor-pointer flex flex-col h-full"
       onClick={() => window.location.href = `/products/${product.id}`}

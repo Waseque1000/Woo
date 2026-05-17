@@ -40,6 +40,11 @@ export default function AdminDashboard() {
     setIsClient(true);
   }, []);
 
+  // Update products when initialProducts changes (useful for Next.js Fast Refresh)
+  useEffect(() => {
+    setProducts(initialProducts);
+  }, [initialProducts]);
+
   const [messages, setMessages] = useState([
     { id: 1, user: "John Doe", email: "john@example.com", lastMessage: "Hey, when will my watch be shipped?", time: "2m ago", status: "unread", chat: [
       { role: "user", content: "Hey, when will my watch be shipped?", time: "10:30 AM" }
@@ -124,8 +129,43 @@ export default function AdminDashboard() {
     </>
   );
 
+  const filteredProducts = products.filter(p => 
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    p.category.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleDeleteProduct = (id) => {
+    setProducts(products.filter(p => p.id !== id));
+    toast.success("Product deleted successfully");
+  };
+
+  const handleSaveProduct = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const productData = {
+      ...editingProduct,
+      name: formData.get("name"),
+      image: formData.get("image") || "/images/headphones.png",
+      price: parseFloat(formData.get("price")),
+      category: formData.get("category"),
+      stock: parseInt(formData.get("stock"), 10)
+    };
+    
+    if (editingProduct.isNew) {
+      productData.id = `prod_${Date.now()}`;
+      delete productData.isNew;
+      setProducts([productData, ...products]);
+      toast.success("Product created successfully");
+    } else {
+      setProducts(products.map(p => p.id === editingProduct.id ? productData : p));
+      toast.success("Product updated successfully");
+    }
+    
+    setEditingProduct(null);
+  };
+
   return (
-    <main className="min-h-screen bg-[#fcfcfc] flex flex-col lg:flex-row">
+    <main className="min-h-screen lg:h-screen lg:overflow-hidden bg-[#fcfcfc] flex flex-col lg:flex-row">
       {/* Mobile Header */}
       <div className="lg:hidden bg-white border-b border-border p-4 flex items-center justify-between sticky top-0 z-50">
          <Link href="/" className="flex items-center gap-2">
@@ -170,7 +210,7 @@ export default function AdminDashboard() {
       </AnimatePresence>
 
       {/* Main Content */}
-      <section className="flex-1 p-4 md:p-10 overflow-y-auto">
+      <section className="flex-1 p-4 md:p-10 overflow-y-auto h-full">
         <header className="flex flex-col md:flex-row md:items-center justify-between mb-8 md:mb-12 gap-6">
            <div>
               <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">
@@ -183,7 +223,10 @@ export default function AdminDashboard() {
                  <Bell size={20} />
                  <span className="absolute top-3 md:top-3 right-1/2 translate-x-4 md:right-3 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
               </button>
-              <button className="flex-[3] md:flex-none bg-black text-white px-6 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-black/90 transition-all shadow-premium">
+              <button 
+                onClick={() => setEditingProduct({ isNew: true, name: "", price: 0, category: "", stock: 0, image: "/images/headphones.png", rating: 5, reviews: 0 })}
+                className="flex-[3] md:flex-none bg-black text-white px-6 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-black/90 transition-all shadow-premium"
+              >
                  <Plus size={20} />
                  Create New
               </button>
@@ -449,7 +492,7 @@ export default function AdminDashboard() {
               className="fixed inset-0 m-auto w-full max-w-xl h-fit bg-white rounded-[3rem] shadow-2xl z-[101] overflow-hidden"
             >
               <div className="p-8 border-b border-border flex items-center justify-between bg-[#fafafa]">
-                 <h2 className="text-2xl font-bold tracking-tight">Edit Product</h2>
+                 <h2 className="text-2xl font-bold tracking-tight">{editingProduct.isNew ? "Create Product" : "Edit Product"}</h2>
                  <button onClick={() => setEditingProduct(null)} className="p-2 hover:bg-muted rounded-full transition-all">
                     <X size={20} />
                  </button>
@@ -459,6 +502,10 @@ export default function AdminDashboard() {
                     <div className="space-y-2 col-span-2">
                        <label className="text-xs font-bold uppercase tracking-widest ml-1 text-muted-foreground">Product Name</label>
                        <input name="name" defaultValue={editingProduct.name} className="w-full bg-muted/50 border border-border px-5 py-3 rounded-2xl focus:bg-white outline-none transition-all font-medium" />
+                    </div>
+                    <div className="space-y-2 col-span-2">
+                       <label className="text-xs font-bold uppercase tracking-widest ml-1 text-muted-foreground">Image URL</label>
+                       <input name="image" defaultValue={editingProduct.image} className="w-full bg-muted/50 border border-border px-5 py-3 rounded-2xl focus:bg-white outline-none transition-all font-medium" placeholder="/images/headphones.png" />
                     </div>
                     <div className="space-y-2">
                        <label className="text-xs font-bold uppercase tracking-widest ml-1 text-muted-foreground">Price ($)</label>
